@@ -852,7 +852,7 @@ const AdminDashboard = () => {
                           <span className="text-slate-300 italic text-[10px]">N/A</span>
                         )}
                       </td>
-                      <td className="py-2 px-2 whitespace-nowrap">
+                      <td className="py-2 px-2">
                         {record.businessType ? (
                           <span className="inline-block px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-semibold border border-slate-200 max-w-[120px] break-words" title={record.businessType}>
                             {record.businessType}
