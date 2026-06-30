@@ -46,6 +46,21 @@ const EmployeeData = () => {
   
   // Copy phone notification state
   const [notification, setNotification] = useState(null);
+  const [editingNoteId, setEditingNoteId] = useState(null);
+  const [tempNote, setTempNote] = useState('');
+
+  const handleSaveNote = async (id, noteText) => {
+    try {
+      await api.patch(`/data/${id}/note`, { note: noteText });
+      setRecords(prev => prev.map(r => r.id === id ? { ...r, note: noteText } : r));
+      showNotification('Đã cập nhật ghi chú thành công!');
+    } catch (err) {
+      console.error(err);
+      showNotification('Không thể cập nhật ghi chú', 'error');
+    } finally {
+      setEditingNoteId(null);
+    }
+  };
 
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
@@ -282,6 +297,7 @@ const EmployeeData = () => {
                   <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Website</th>
                   <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Google Maps</th>
                   <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Trạng thái</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Ghi chú</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs">
@@ -372,6 +388,32 @@ const EmployeeData = () => {
                         ))}
                       </select>
                     </td>
+                    <td className="py-2 px-2">
+                      {editingNoteId === record.id ? (
+                        <input
+                          type="text"
+                          value={tempNote}
+                          onChange={(e) => setTempNote(e.target.value)}
+                          onBlur={() => handleSaveNote(record.id, tempNote)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSaveNote(record.id, tempNote);
+                            if (e.key === 'Escape') setEditingNoteId(null);
+                          }}
+                          autoFocus
+                          className="w-full min-w-[100px] px-1.5 py-0.5 border border-primary-500 rounded text-xs focus:outline-none"
+                        />
+                      ) : (
+                        <div 
+                          onClick={() => {
+                            setEditingNoteId(record.id);
+                            setTempNote(record.note || '');
+                          }}
+                          className="cursor-pointer hover:bg-slate-100/80 px-1 py-0.5 rounded min-h-[20px] min-w-[80px] max-w-[150px] break-words text-slate-600 font-medium"
+                        >
+                          {record.note ? record.note : <span className="text-slate-300 italic text-[10px]">Thêm ghi chú...</span>}
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -455,6 +497,13 @@ const EmployeeData = () => {
                     <span className="text-slate-400 text-sm italic">Không có link bản đồ</span>
                   )}
                 </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <span className="block text-xs font-bold text-slate-400 uppercase">Ghi chú</span>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 text-sm whitespace-pre-wrap min-h-[40px]">
+                {currentRecord.note || <span className="text-slate-400 italic">Không có ghi chú</span>}
               </div>
             </div>
 

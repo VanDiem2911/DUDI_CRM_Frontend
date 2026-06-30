@@ -21,7 +21,8 @@ import {
   RefreshCw,
   MoreHorizontal,
   Copy,
-  Info
+  Info,
+  Database
 } from 'lucide-react';
 
 const STATUSES = [
@@ -53,6 +54,7 @@ const DataManagement = () => {
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
 
   const [currentRecord, setCurrentRecord] = useState(null);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
@@ -85,6 +87,21 @@ const DataManagement = () => {
   };
 
   const [notification, setNotification] = useState(null);
+  const [editingNoteId, setEditingNoteId] = useState(null);
+  const [tempNote, setTempNote] = useState('');
+
+  const handleSaveNote = async (id, noteText) => {
+    try {
+      await api.patch(`/data/${id}/note`, { note: noteText });
+      setRecords(prev => prev.map(r => r.id === id ? { ...r, note: noteText } : r));
+      showNotification('Đã cập nhật ghi chú thành công!');
+    } catch (err) {
+      console.error(err);
+      showNotification('Không thể cập nhật ghi chú', 'error');
+    } finally {
+      setEditingNoteId(null);
+    }
+  };
 
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
@@ -114,7 +131,8 @@ const DataManagement = () => {
     website: '',
     businessType: '',
     googleMapUrl: '',
-    status: 'Chưa xử lý'
+    status: 'Chưa xử lý',
+    note: ''
   });
   const [formErrors, setFormErrors] = useState({});
   const [formSubmitLoading, setFormSubmitLoading] = useState(false);
@@ -259,6 +277,21 @@ const DataManagement = () => {
     }
   };
 
+  const handleBulkDeleteConfirm = async () => {
+    if (selectedIds.length === 0) return;
+    try {
+      await api.post('/data/delete-bulk', selectedIds);
+      setIsBulkDeleteModalOpen(false);
+      setSelectedIds([]);
+      showNotification('Đã xóa dữ liệu hàng loạt thành công!');
+      fetchRecords();
+      fetchEmployees();
+    } catch (err) {
+      console.error(err);
+      showNotification('Có lỗi xảy ra khi xóa dữ liệu hàng loạt', 'error');
+    }
+  };
+
   // Open helper functions
   const openAddModal = () => {
     setCurrentRecord(null);
@@ -270,7 +303,8 @@ const DataManagement = () => {
       website: '',
       businessType: '',
       googleMapUrl: '',
-      status: 'Chưa xử lý'
+      status: 'Chưa xử lý',
+      note: ''
     });
     setFormErrors({});
     setIsFormModalOpen(true);
@@ -286,7 +320,8 @@ const DataManagement = () => {
       website: record.website || '',
       businessType: record.businessType || '',
       googleMapUrl: record.googleMapUrl || '',
-      status: record.status || 'Chưa xử lý'
+      status: record.status || 'Chưa xử lý',
+      note: record.note || ''
     });
     setFormErrors({});
     setIsFormModalOpen(true);
@@ -320,12 +355,20 @@ const DataManagement = () => {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {selectedIds.length > 0 && (
-            <button
-              onClick={() => openAssignModal()}
-              className="flex items-center px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary-600/20 transition"
-            >
-              <UserPlus className="w-4 h-4 mr-2" /> Chia data hàng loạt ({selectedIds.length})
-            </button>
+            <>
+              <button
+                onClick={() => openAssignModal()}
+                className="flex items-center px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary-600/20 transition"
+              >
+                <UserPlus className="w-4 h-4 mr-2" /> Chia data hàng loạt ({selectedIds.length})
+              </button>
+              <button
+                onClick={() => setIsBulkDeleteModalOpen(true)}
+                className="flex items-center px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-red-600/20 transition"
+              >
+                <Trash2 className="w-4 h-4 mr-2" /> Xóa hàng loạt ({selectedIds.length})
+              </button>
+            </>
           )}
           <button
             onClick={openAddModal}
@@ -445,7 +488,8 @@ const DataManagement = () => {
                   <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Website</th>
                   <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Google Maps</th>
                   <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Trạng thái</th>
-                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Nhân viên phụ trách</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Nhân viên</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Ghi chú</th>
                   <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center w-20">Hành động</th>
                 </tr>
               </thead>
@@ -548,6 +592,32 @@ const DataManagement = () => {
                           <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-50 text-slate-400 border border-dashed border-slate-200">
                             Chưa giao
                           </span>
+                        )}
+                      </td>
+                      <td className="py-2 px-2">
+                        {editingNoteId === record.id ? (
+                          <input
+                            type="text"
+                            value={tempNote}
+                            onChange={(e) => setTempNote(e.target.value)}
+                            onBlur={() => handleSaveNote(record.id, tempNote)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleSaveNote(record.id, tempNote);
+                              if (e.key === 'Escape') setEditingNoteId(null);
+                            }}
+                            autoFocus
+                            className="w-full min-w-[100px] px-1.5 py-0.5 border border-primary-500 rounded text-xs focus:outline-none"
+                          />
+                        ) : (
+                          <div 
+                            onClick={() => {
+                              setEditingNoteId(record.id);
+                              setTempNote(record.note || '');
+                            }}
+                            className="cursor-pointer hover:bg-slate-100/80 px-1 py-0.5 rounded min-h-[20px] min-w-[80px] max-w-[150px] break-words text-slate-600 font-medium"
+                          >
+                            {record.note ? record.note : <span className="text-slate-300 italic text-[10px]">Thêm ghi chú...</span>}
+                          </div>
                         )}
                       </td>
                       <td className="py-2 px-2 whitespace-nowrap text-center">
@@ -703,6 +773,17 @@ const DataManagement = () => {
                 {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">Ghi chú</label>
+              <input
+                type="text"
+                value={formData.note}
+                onChange={(e) => setFormData({ ...formData, note: e.target.value })}
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-slate-700 text-sm focus:outline-none focus:border-primary-500"
+                placeholder="Nhập ghi chú (nếu có)..."
+              />
+            </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
@@ -855,6 +936,13 @@ const DataManagement = () => {
               )}
             </div>
 
+            <div className="space-y-2">
+              <span className="block text-xs font-bold text-slate-400 uppercase">Ghi chú</span>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 text-sm whitespace-pre-wrap min-h-[40px]">
+                {currentRecord.note || <span className="text-slate-400 italic">Không có ghi chú</span>}
+              </div>
+            </div>
+
             <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
               <button
                 type="button"
@@ -903,6 +991,41 @@ const DataManagement = () => {
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* BULK DELETE MODAL */}
+      <Modal
+        isOpen={isBulkDeleteModalOpen}
+        onClose={() => setIsBulkDeleteModalOpen(false)}
+        title="Xác nhận xóa nhiều Data"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="flex items-center p-3 bg-red-50 text-red-700 rounded-xl text-sm border border-red-100">
+            <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+            <span>Hành động này không thể khôi phục!</span>
+          </div>
+          <p className="text-slate-600 text-sm">
+            Bạn có chắc chắn muốn xóa <strong>{selectedIds.length}</strong> bản ghi dữ liệu đã chọn?
+          </p>
+
+          <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => setIsBulkDeleteModalOpen(false)}
+              className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl font-semibold text-slate-600 text-sm transition"
+            >
+              Hủy
+            </button>
+            <button
+              type="button"
+              onClick={handleBulkDeleteConfirm}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-sm shadow-md shadow-red-600/20 transition"
+            >
+              Xóa các bản ghi
+            </button>
+          </div>
+        </div>
       </Modal>
 
       {/* GLOBAL DROPDOWN ACTION MENU */}

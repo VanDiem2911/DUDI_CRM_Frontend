@@ -82,7 +82,8 @@ const AdminDashboard = () => {
     website: '',
     businessType: '',
     googleMapUrl: '',
-    status: 'Chưa xử lý'
+    status: 'Chưa xử lý',
+    note: ''
   });
   const [formErrors, setFormErrors] = useState({});
   const [formSubmitLoading, setFormSubmitLoading] = useState(false);
@@ -93,6 +94,21 @@ const AdminDashboard = () => {
 
   // Dropdown actions menu state
   const [activeDropdownId, setActiveDropdownId] = useState(null);
+  const [editingNoteId, setEditingNoteId] = useState(null);
+  const [tempNote, setTempNote] = useState('');
+
+  const handleSaveNote = async (id, noteText) => {
+    try {
+      await api.patch(`/data/${id}/note`, { note: noteText });
+      setRecords(prev => prev.map(r => r.id === id ? { ...r, note: noteText } : r));
+      showNotification('Đã cập nhật ghi chú thành công!');
+    } catch (err) {
+      console.error(err);
+      showNotification('Không thể cập nhật ghi chú', 'error');
+    } finally {
+      setEditingNoteId(null);
+    }
+  };
   const [activeDropdownRecord, setActiveDropdownRecord] = useState(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
 
@@ -296,7 +312,7 @@ const AdminDashboard = () => {
 
       // Define header
       let csvContent = '\uFEFF'; // UTF-8 BOM for Vietnamese character support
-      csvContent += 'Tên doanh nghiệp,Đường,Khu vực,Số điện thoại,Website,Danh mục,Google Maps,Trạng thái,Nhân viên\n';
+      csvContent += 'Tên doanh nghiệp,Đường,Khu vực,Số điện thoại,Website,Danh mục,Google Maps,Trạng thái,Nhân viên,Ghi chú\n';
 
       // Map rows
       records.forEach(r => {
@@ -309,7 +325,8 @@ const AdminDashboard = () => {
           `"${(r.businessType || '').replace(/"/g, '""')}"`,
           `"${(r.googleMapUrl || '').replace(/"/g, '""')}"`,
           `"${r.status || 'Chưa xử lý'}"`,
-          `"${r.assignedToName || 'Chưa giao'}"`
+          `"${r.assignedToName || 'Chưa giao'}"`,
+          `"${(r.note || '').replace(/"/g, '""')}"`
         ];
         csvContent += row.join(',') + '\n';
       });
@@ -417,7 +434,8 @@ const AdminDashboard = () => {
       website: '',
       businessType: '',
       googleMapUrl: '',
-      status: 'Chưa xử lý'
+      status: 'Chưa xử lý',
+      note: ''
     });
     setFormErrors({});
     setIsFormModalOpen(true);
@@ -433,7 +451,8 @@ const AdminDashboard = () => {
       website: record.website || '',
       businessType: record.businessType || '',
       googleMapUrl: record.googleMapUrl || '',
-      status: record.status || 'Chưa xử lý'
+      status: record.status || 'Chưa xử lý',
+      note: record.note || ''
     });
     setFormErrors({});
     setIsFormModalOpen(true);
@@ -802,6 +821,7 @@ const AdminDashboard = () => {
                     <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Google Maps</th>
                     <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Trạng thái</th>
                     <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Nhân viên</th>
+                    <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Ghi chú</th>
                     <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center w-20">Hành động</th>
                   </tr>
                 </thead>
@@ -891,6 +911,32 @@ const AdminDashboard = () => {
                           <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-50 text-slate-400 border border-dashed border-slate-200">
                             Chưa giao
                           </span>
+                        )}
+                      </td>
+                      <td className="py-2 px-2">
+                        {editingNoteId === record.id ? (
+                          <input
+                            type="text"
+                            value={tempNote}
+                            onChange={(e) => setTempNote(e.target.value)}
+                            onBlur={() => handleSaveNote(record.id, tempNote)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleSaveNote(record.id, tempNote);
+                              if (e.key === 'Escape') setEditingNoteId(null);
+                            }}
+                            autoFocus
+                            className="w-full min-w-[100px] px-1.5 py-0.5 border border-primary-500 rounded text-xs focus:outline-none"
+                          />
+                        ) : (
+                          <div 
+                            onClick={() => {
+                              setEditingNoteId(record.id);
+                              setTempNote(record.note || '');
+                            }}
+                            className="cursor-pointer hover:bg-slate-100/80 px-1 py-0.5 rounded min-h-[20px] min-w-[80px] max-w-[150px] break-words text-slate-600 font-medium"
+                          >
+                            {record.note ? record.note : <span className="text-slate-300 italic text-[10px]">Thêm ghi chú...</span>}
+                          </div>
                         )}
                       </td>
                       <td className="py-2 px-2 whitespace-nowrap text-center">
@@ -1043,6 +1089,17 @@ const AdminDashboard = () => {
                 {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">Ghi chú</label>
+              <input
+                type="text"
+                value={formData.note}
+                onChange={(e) => setFormData({ ...formData, note: e.target.value })}
+                className="w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-slate-700 text-sm focus:outline-none focus:border-primary-500"
+                placeholder="Nhập ghi chú (nếu có)..."
+              />
+            </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
@@ -1192,6 +1249,13 @@ const AdminDashboard = () => {
                   Chưa giao cho ai xử lý. Bạn có thể bấm Chia data để gán nhân viên.
                 </div>
               )}
+            </div>
+
+            <div className="space-y-2">
+              <span className="block text-xs font-bold text-slate-400 uppercase">Ghi chú</span>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 text-sm whitespace-pre-wrap min-h-[40px]">
+                {currentRecord.note || <span className="text-slate-400 italic">Không có ghi chú</span>}
+              </div>
             </div>
 
             <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
