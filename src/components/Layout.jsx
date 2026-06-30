@@ -65,7 +65,7 @@ const Layout = ({ children }) => {
   return (
     <div className="flex h-screen overflow-hidden bg-[#F8FAFC]">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:flex-shrink-0 w-64 bg-slate-900 flex-col border-r border-slate-800">
+      <aside className="hidden md:flex md:flex-shrink-0 w-52 bg-slate-900 flex-col border-r border-slate-800">
         <div className="flex items-center justify-start h-16 border-b border-slate-800 px-6">
           <Link to="/">
             <Logo className="w-8 h-8" />
@@ -143,7 +143,7 @@ const Layout = ({ children }) => {
         </header>
 
         {/* Workspace Body */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
           {children}
         </main>
       </div>
