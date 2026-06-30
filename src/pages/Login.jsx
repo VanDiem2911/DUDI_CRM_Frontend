@@ -213,7 +213,7 @@ const Login = () => {
             <button
               type="button"
               disabled={loading}
-              onClick={() => handleQuickLogin('nv1', '123456')}
+              onClick={() => handleQuickLogin('2026061535', '1234')}
               className="flex items-center justify-center gap-2 px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 disabled:opacity-50 transition duration-200"
             >
               👤 Nhân viên
