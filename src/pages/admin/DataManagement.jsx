@@ -469,19 +469,19 @@ const DataManagement = () => {
                           )}
                         </button>
                       </td>
-                      <td className="py-3 px-3 font-bold text-slate-800 text-sm whitespace-nowrap max-w-[180px] truncate" title={record.businessName}>
+                      <td className="py-3 px-3 font-bold text-slate-800 text-sm min-w-[180px] max-w-[280px] break-words" title={record.businessName}>
                         {record.businessName}
                       </td>
                       <td className="py-3 px-3 whitespace-nowrap">
                         {record.businessType ? (
-                          <span className="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-semibold border border-slate-200 max-w-[140px] truncate" title={record.businessType}>
+                          <span className="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-semibold border border-slate-200 max-w-[200px] break-words" title={record.businessType}>
                             {record.businessType}
                           </span>
                         ) : (
                           <span className="text-slate-300 text-xs italic">-</span>
                         )}
                       </td>
-                      <td className="py-3 px-3 text-slate-700 text-sm max-w-[180px] truncate" title={record.address}>
+                      <td className="py-3 px-3 text-slate-700 text-sm min-w-[200px] max-w-[300px] break-words" title={record.address}>
                         {record.address}
                       </td>
                       <td className="py-3 px-3 text-slate-600 text-sm whitespace-nowrap">

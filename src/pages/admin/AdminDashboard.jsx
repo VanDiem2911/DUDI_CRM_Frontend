@@ -811,10 +811,10 @@ const AdminDashboard = () => {
                       key={record.id} 
                       className={`hover:bg-slate-50/30 transition duration-150 ${activeDropdownId === record.id ? 'bg-slate-50/50' : ''}`}
                     >
-                      <td className="py-3 px-3 font-bold text-slate-800 whitespace-nowrap max-w-[180px] truncate" title={record.businessName}>
+                      <td className="py-3 px-3 font-bold text-slate-800 text-sm min-w-[180px] max-w-[280px] break-words" title={record.businessName}>
                         {record.businessName}
                       </td>
-                      <td className="py-3 px-3 text-slate-600 whitespace-nowrap max-w-[180px] truncate" title={record.address}>
+                      <td className="py-3 px-3 text-slate-600 text-sm min-w-[200px] max-w-[300px] break-words" title={record.address}>
                         {record.address}
                       </td>
                       <td className="py-3 px-3 text-slate-600 whitespace-nowrap">
@@ -854,7 +854,7 @@ const AdminDashboard = () => {
                       </td>
                       <td className="py-3 px-3 whitespace-nowrap">
                         {record.businessType ? (
-                          <span className="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-semibold border border-slate-200 max-w-[140px] truncate" title={record.businessType}>
+                          <span className="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-semibold border border-slate-200 max-w-[200px] break-words" title={record.businessType}>
                             {record.businessType}
                           </span>
                         ) : (
