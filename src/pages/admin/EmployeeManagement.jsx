@@ -1257,6 +1257,14 @@ const EmployeeManagement = () => {
                 <div className="bg-emerald-50 text-emerald-800 p-2 rounded-lg border border-emerald-100"><span className="block text-emerald-400 font-semibold uppercase text-[10px]">Thành công</span><span className="text-sm font-bold">{accountsImportResult.successCount}</span></div>
                 <div className="bg-red-50 text-red-800 p-2 rounded-lg border border-red-100"><span className="block text-red-400 font-semibold uppercase text-[10px]">Thất bại</span><span className="text-sm font-bold">{accountsImportResult.failedCount}</span></div>
               </div>
+              {accountsImportResult.errors && accountsImportResult.errors.length > 0 && (
+                <div className="bg-red-50 text-red-800 p-3 rounded-lg border border-red-100 text-xs space-y-1 max-h-40 overflow-y-auto font-medium">
+                  <p className="font-bold mb-1">Chi tiết lỗi:</p>
+                  {accountsImportResult.errors.map((err, idx) => (
+                    <p key={idx}>- Dòng {err.row}: {err.message}</p>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
