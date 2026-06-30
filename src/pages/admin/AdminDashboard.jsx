@@ -683,15 +683,6 @@ const AdminDashboard = () => {
 
           {/* Action options */}
           <div className="flex flex-wrap items-center gap-2">
-            
-            {/* Sheet Tabs mock dropdown */}
-            <select
-              className="px-3 py-2.5 border border-slate-200 rounded-xl bg-slate-50 text-slate-700 text-sm font-semibold focus:outline-none focus:border-primary-500"
-              defaultValue="Trang tính1"
-            >
-              <option value="Trang tính1">Trang tính1</option>
-              <option value="Trang tính2">Trang tính2</option>
-            </select>
 
             {/* Sync sheets button */}
             <button
