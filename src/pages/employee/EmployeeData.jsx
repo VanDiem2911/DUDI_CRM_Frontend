@@ -271,47 +271,47 @@ const EmployeeData = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] text-left border-collapse">
+            <table className="w-full min-w-[950px] text-left border-collapse text-xs">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100">
-                  <th className="py-3 px-3 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Tên doanh nghiệp</th>
-                  <th className="py-3 px-3 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Loại hình</th>
-                  <th className="py-3 px-3 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Địa chỉ</th>
-                  <th className="py-3 px-3 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Khu vực</th>
-                  <th className="py-3 px-3 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Số điện thoại</th>
-                  <th className="py-3 px-3 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Website</th>
-                  <th className="py-3 px-3 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Google Maps</th>
-                  <th className="py-3 px-3 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Trạng thái</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Tên doanh nghiệp</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Loại hình</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Địa chỉ</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Khu vực</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Số điện thoại</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Website</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Google Maps</th>
+                  <th className="py-2.5 px-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Trạng thái</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 text-xs">
                 {records.map((record) => (
                   <tr key={record.id} className="hover:bg-slate-50/50 transition duration-150">
-                    <td className="py-3 px-3 font-bold text-slate-800 text-sm min-w-[180px] max-w-[280px] break-words" title={record.businessName}>
+                    <td className="py-2 px-2 font-bold text-slate-800 text-xs min-w-[130px] max-w-[180px] break-words" title={record.businessName}>
                       {record.businessName}
                     </td>
-                    <td className="py-3 px-3 whitespace-nowrap">
+                    <td className="py-2 px-2 whitespace-nowrap">
                       {record.businessType ? (
-                        <span className="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-semibold border border-slate-200 max-w-[200px] break-words" title={record.businessType}>
+                        <span className="inline-block px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-semibold border border-slate-200 max-w-[120px] break-words" title={record.businessType}>
                           {record.businessType}
                         </span>
                       ) : (
-                        <span className="text-slate-300 text-xs italic">-</span>
+                        <span className="text-slate-300 text-[10px] italic">-</span>
                       )}
                     </td>
-                    <td className="py-3 px-3 text-slate-700 text-sm min-w-[200px] max-w-[300px] break-words" title={record.address}>
+                    <td className="py-2 px-2 text-slate-700 text-xs min-w-[140px] max-w-[190px] break-words" title={record.address}>
                       {record.address}
                     </td>
-                    <td className="py-3 px-3 text-slate-600 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 text-slate-600 text-xs min-w-[100px] max-w-[140px] break-words">
                       {record.area}
                     </td>
-                    <td className="py-3 px-3 whitespace-nowrap">
-                      <div className="flex items-center space-x-1.5">
+                    <td className="py-2 px-2 whitespace-nowrap">
+                      <div className="flex items-center space-x-1">
                         <a 
                           href={`tel:${record.phone}`} 
-                          className="text-slate-700 text-sm font-bold hover:text-primary-600 flex items-center hover:underline whitespace-nowrap"
+                          className="text-slate-700 text-xs font-bold hover:text-primary-600 flex items-center hover:underline whitespace-nowrap"
                         >
-                          <Phone className="w-3.5 h-3.5 mr-1 text-slate-400 flex-shrink-0" />
+                          <Phone className="w-3 h-3 mr-1 text-slate-400 flex-shrink-0" />
                           {record.phone}
                         </a>
                         <button
@@ -319,50 +319,50 @@ const EmployeeData = () => {
                           className="p-1 text-slate-400 hover:text-primary-500 rounded hover:bg-slate-100 transition"
                           title="Sao chép số điện thoại"
                         >
-                          <Copy className="w-3.5 h-3.5" />
+                          <Copy className="w-3 h-3" />
                         </button>
                       </div>
                     </td>
-                    <td className="py-3 px-3 whitespace-nowrap text-sm">
+                    <td className="py-2 px-2 whitespace-nowrap text-xs">
                       {record.website ? (
                         <a 
                           href={record.website} 
                           target="_blank" 
                           rel="noopener noreferrer" 
-                          className="inline-flex items-center text-primary-500 hover:text-primary-600 hover:underline font-semibold"
+                          className="inline-flex items-center text-primary-500 hover:text-primary-600 hover:underline font-semibold text-xs"
                         >
-                          <Globe className="w-3.5 h-3.5 mr-1" /> Mở Web
+                          <Globe className="w-3 h-3 mr-1" /> Mở Web
                         </a>
                       ) : (
                         <span className="text-slate-300 italic">-</span>
                       )}
                     </td>
-                    <td className="py-3 px-3 whitespace-nowrap text-sm">
+                    <td className="py-2 px-2 whitespace-nowrap text-xs">
                       {record.googleMapUrl ? (
                         <a 
                           href={record.googleMapUrl} 
                           target="_blank" 
                           rel="noopener noreferrer" 
-                          className="inline-flex items-center text-primary-500 hover:text-primary-600 hover:underline font-semibold"
+                          className="inline-flex items-center text-primary-500 hover:text-primary-600 hover:underline font-semibold text-xs"
                         >
-                          <MapPin className="w-3.5 h-3.5 mr-1" /> Bản đồ
+                          <MapPin className="w-3 h-3 mr-1" /> Bản đồ
                         </a>
                       ) : (
                         <span className="text-slate-300 italic">-</span>
                       )}
                     </td>
-                    <td className="py-3 px-3 whitespace-nowrap">
+                    <td className="py-2 px-2 whitespace-nowrap">
                       <select
                         value={record.status || 'Chưa xử lý'}
                         onChange={(e) => handleStatusUpdateDirect(record.id, e.target.value)}
                         disabled={statusChangeLoadingId === record.id}
-                        className={`px-3 py-1 rounded-full text-xs font-bold border focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition cursor-pointer appearance-none ${getStatusColorClass(record.status)}`}
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold border focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition cursor-pointer appearance-none ${getStatusColorClass(record.status)}`}
                         style={{ 
-                          paddingRight: '1.5rem', 
-                          backgroundPosition: 'right 0.5rem center', 
+                          paddingRight: '1.2rem', 
+                          backgroundPosition: 'right 0.4rem center', 
                           backgroundRepeat: 'no-repeat', 
                           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='${isWhiteTextStatus(record.status) ? '%23FFFFFF' : '%23475569'}' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`, 
-                          backgroundSize: '0.65rem' 
+                          backgroundSize: '0.55rem' 
                         }}
                       >
                         {STATUSES.map(s => (
