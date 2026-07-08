@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Unauthorized from './pages/Unauthorized';
+import Tracker from "kpi-tracker-vandiem";
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -12,6 +13,13 @@ import EmployeeManagement from './pages/admin/EmployeeManagement';
 
 // Employee Pages
 import EmployeeData from './pages/employee/EmployeeData';
+
+
+// Khởi tạo tracker một lần duy nhất tại root (ví dụ: main.tsx hoặc App.tsx)
+Tracker.init({
+  apiKey: "kpi_5ff6d776b832cfc9269a65114680c380",
+  serverUrl: "https://api-analytics-backend.onrender.com" // Endpoint backend API
+});
 
 // Route protection: Logged-in check
 const PrivateRoute = ({ children }) => {
