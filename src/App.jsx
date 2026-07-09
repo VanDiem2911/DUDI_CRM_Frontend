@@ -6,6 +6,11 @@ import Login from './pages/Login';
 import Unauthorized from './pages/Unauthorized';
 import Tracker from "kpi-tracker-vandiem";
 
+Tracker.init({
+  serverUrl: "https://api-analytics-backend.onrender.com"
+});
+
+
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import DataManagement from './pages/admin/DataManagement';
@@ -14,9 +19,7 @@ import EmployeeManagement from './pages/admin/EmployeeManagement';
 // Employee Pages
 import EmployeeData from './pages/employee/EmployeeData';
 
-Tracker.init({
-  serverUrl: "https://api-analytics-backend.onrender.com" // Endpoint backend API
-});
+
 
 // Route protection: Logged-in check
 const PrivateRoute = ({ children }) => {
