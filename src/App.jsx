@@ -14,17 +14,14 @@ import EmployeeManagement from './pages/admin/EmployeeManagement';
 // Employee Pages
 import EmployeeData from './pages/employee/EmployeeData';
 
-
-// Khởi tạo tracker một lần duy nhất tại root (ví dụ: main.tsx hoặc App.tsx)
 Tracker.init({
-  apiKey: "kpi_5ff6d776b832cfc9269a65114680c380",
   serverUrl: "https://api-analytics-backend.onrender.com" // Endpoint backend API
 });
 
 // Route protection: Logged-in check
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -32,14 +29,14 @@ const PrivateRoute = ({ children }) => {
       </div>
     );
   }
-  
+
   return user ? children : <Navigate to="/login" replace />;
 };
 
 // Route protection: Admin role check
 const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -47,7 +44,7 @@ const AdminRoute = ({ children }) => {
       </div>
     );
   }
-  
+
   if (!user) return <Navigate to="/login" replace />;
   return user.role === 'ROLE_ADMIN' ? children : <Navigate to="/unauthorized" replace />;
 };
@@ -55,7 +52,7 @@ const AdminRoute = ({ children }) => {
 // Route protection: Employee role check
 const EmployeeRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -63,7 +60,7 @@ const EmployeeRoute = ({ children }) => {
       </div>
     );
   }
-  
+
   if (!user) return <Navigate to="/login" replace />;
   return user.role === 'ROLE_EMPLOYEE' ? children : <Navigate to="/unauthorized" replace />;
 };
@@ -71,7 +68,7 @@ const EmployeeRoute = ({ children }) => {
 // Home router redirector based on current user session role
 const HomeRedirect = () => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -79,7 +76,7 @@ const HomeRedirect = () => {
       </div>
     );
   }
-  
+
   if (!user) return <Navigate to="/login" replace />;
   return user.role === 'ROLE_ADMIN' ? <Navigate to="/admin" replace /> : <Navigate to="/employee" replace />;
 };
